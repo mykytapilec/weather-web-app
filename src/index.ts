@@ -1,1 +1,3 @@
-console.log('Weather app initialized');
+import { startApp } from './app/app.js';
+
+startApp();
