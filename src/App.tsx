@@ -1,42 +1,23 @@
-import { useState } from 'react';
-import { getWeather } from './api/weather.api';
-import type { WeatherResponse } from './types/weather';
+import { ErrorState } from './components/ErrorState';
+import { LoadingState } from './components/LoadingState';
+import { SearchBar } from './components/SearchBar';
+import { WeatherCard } from './components/WeatherCard';
+import { useWeather } from './hooks/useWeather';
 
 function App() {
-  const [weather, setWeather] = useState<WeatherResponse | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  async function handleSearch(): Promise<void> {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const data = await getWeather('London');
-
-      setWeather(data);
-    } catch {
-      setError('Unable to load weather data');
-    } finally {
-      setLoading(false);
-    }
-  }
+  const { weather, loading, error, searchWeather } = useWeather();
 
   return (
     <main>
       <h1>Weather Web App</h1>
 
-      <button onClick={handleSearch}>Load Weather</button>
+      <SearchBar onSearch={searchWeather} />
 
-      {loading && <p>Loading...</p>}
+      {loading && <LoadingState />}
 
-      {error && <p>{error}</p>}
+      {error && <ErrorState message={error} />}
 
-      {weather && !loading && (
-        <p>
-          {weather.resolvedAddress}: {weather.currentConditions.temp}°C
-        </p>
-      )}
+      {weather && !loading && <WeatherCard weather={weather} />}
     </main>
   );
 }
