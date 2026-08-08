@@ -23,7 +23,11 @@ export function SearchBar({ onSearch }: SearchBarProps) {
 
   return (
     <form onSubmit={handleSubmit}>
+      <label htmlFor="city-search">Search city</label>
+
       <input
+        id="city-search"
+        type="text"
         value={city}
         onChange={(event) => setCity(event.target.value)}
         placeholder="Enter city"
